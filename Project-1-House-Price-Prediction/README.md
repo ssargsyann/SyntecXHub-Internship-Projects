@@ -119,7 +119,7 @@ Coefficients from the trained Linear Regression model (on standardized features)
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/<your-username>/house-price-prediction.git
+git clone https://github.com/ssargsyann/house-price-prediction.git
 cd house-price-prediction
 ```
 
