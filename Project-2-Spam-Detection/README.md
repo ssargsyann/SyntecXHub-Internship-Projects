@@ -87,6 +87,5 @@ for email, pred, prob in zip(emails, predictions, probabilities):
 ## Author
 
 **Sargis Sargsyan**
-GitHub: [github.com/ssargsyann](https://github.com/ssargsyann)
-
-Built as part of the SyntecXHub Machine Learning Virtual Internship.
+Python / Machine Learning Engineer
+*SyntecXHub Virtual Internship — Project 2*
