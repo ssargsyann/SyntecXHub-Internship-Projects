@@ -1,0 +1,25 @@
+[project]
+name = "project-2-spam-detection"
+version = "1.0.0"
+description = "NLP spam/ham email classifier using TF-IDF and Logistic Regression"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    { name = "Sargis Sargsyan", url = "https://github.com/ssargsyann" }
+]
+
+dependencies = [
+    "pandas==2.2.3",
+    "numpy==1.26.4",
+    "scikit-learn==1.5.2",
+    "joblib==1.4.2",
+    "matplotlib==3.9.2",
+    "seaborn==0.13.2",
+]
+
+[project.urls]
+Repository = "https://github.com/ssargsyann/Project-2-Spam-Detection"
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
