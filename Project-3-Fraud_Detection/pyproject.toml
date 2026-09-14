@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=68.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "Project-3-Fraud_Detection"
+version = "0.1.0"
+description = "Credit card / mobile-money fraud detection using XGBoost, Random Forest, and SMOTE on the imbalanced PaySim dataset."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+    { name = "Sargis Sargsyan" }
+]
+keywords = [
+    "fraud-detection",
+    "machine-learning",
+    "xgboost",
+    "smote",
+    "imbalanced-classification",
+    "scikit-learn",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = [
+    "numpy==1.26.4",
+    "pandas==2.2.2",
+    "matplotlib==3.8.4",
+    "seaborn==0.13.2",
+    "scikit-learn==1.4.2",
+    "imbalanced-learn==0.12.3",
+    "xgboost==2.0.3",
+    "joblib==1.4.2",
+]
+
+[project.optional-dependencies]
+notebook = [
+    "jupyter==1.0.0",
+    "ipykernel==6.29.4",
+]
+dev = [
+    "pytest==8.2.0",
+]
+
+[project.urls]
+Repository = "https://github.com/ssargsyann/SyntecXHub-Internship-Projects"
+
+[project.scripts]
+predict-fraud = "predict:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+py-modules = ["predict"]
