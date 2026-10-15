@@ -47,7 +47,7 @@ def get_tmdb_api_key() -> str | None:
 
 
 def movie_label(row) -> str:
-    return row["selection_label"]
+    return f"{row['title']} ({row['year']})"
 
 
 st.markdown(
