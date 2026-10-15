@@ -28,25 +28,14 @@ def load_movies(csv_path: str | Path) -> pd.DataFrame:
         missing_text = ", ".join(sorted(missing))
         raise ValueError(f"Movie catalogue is missing required columns: {missing_text}")
 
-    if movies["title"].duplicated().any():
-        raise ValueError("Movie catalogue contains duplicate movie titles.")
+    movies = movies.fillna("")
+    if "selection_label" not in movies.columns:
+        movies["selection_label"] = movies["title"] + " (" + movies["year"].astype(str) + ")"
+    return movies
 
-    return movies.fillna("")
 
-
-def recommend_movies(movies: pd.DataFrame, selected_title: str, top_n: int = 5) -> pd.DataFrame:
-    """Return the closest content-based matches for a selected movie.
-
-    The score compares genre, keywords, and the short plot description with a
-    TF-IDF/cosine-similarity model. A small rating tie-breaker keeps results
-    useful when several movies have very similar descriptions.
-    """
-    matches = movies.index[movies["title"] == selected_title].tolist()
-    if not matches:
-        raise ValueError(f"Movie not found in catalogue: {selected_title}")
-    if top_n < 1:
-        raise ValueError("top_n must be at least 1")
-
+def build_feature_texts(movies: pd.DataFrame) -> tuple[str, ...]:
+    """Combine the fields used to compare movies into one text per movie."""
     content = (
         movies["genres"].astype(str)
         + " "
@@ -54,14 +43,44 @@ def recommend_movies(movies: pd.DataFrame, selected_title: str, top_n: int = 5) 
         + " "
         + movies["overview"].astype(str)
     )
+    return tuple(content)
+
+
+def build_feature_matrix(feature_texts: tuple[str, ...]):
+    """Create the sparse TF-IDF matrix once and reuse it for selections."""
     vectorizer = TfidfVectorizer(stop_words="english", ngram_range=(1, 2))
-    vectors = vectorizer.fit_transform(content)
-    selected_position = movies.index.get_loc(matches[0])
-    scores = linear_kernel(vectors[selected_position], vectors).ravel()
+    return vectorizer.fit_transform(feature_texts)
+
+
+def recommend_movies(
+    movies: pd.DataFrame,
+    selected_index: int | str,
+    top_n: int = 5,
+    feature_matrix=None,
+) -> pd.DataFrame:
+    """Return the closest content-based matches for the selected movie.
+
+    A selection index keeps films with the same title unambiguous. Passing a
+    title string remains supported for simple scripts and tests.
+    """
+    if isinstance(selected_index, str):
+        matches = movies.index[movies["title"] == selected_index].tolist()
+        if not matches:
+            raise ValueError(f"Movie not found in catalogue: {selected_index}")
+        selected_index = matches[0]
+    elif selected_index not in movies.index:
+        raise ValueError(f"Movie index not found in catalogue: {selected_index}")
+    if top_n < 1:
+        raise ValueError("top_n must be at least 1")
+
+    if feature_matrix is None:
+        feature_matrix = build_feature_matrix(build_feature_texts(movies))
+    selected_position = movies.index.get_loc(selected_index)
+    scores = linear_kernel(feature_matrix[selected_position], feature_matrix).ravel()
 
     ranked = movies.copy()
     ranked["_similarity"] = scores
-    ranked = ranked.drop(index=matches[0])
+    ranked = ranked.drop(index=selected_index)
     ranked = ranked.sort_values(
         ["_similarity", "rating"], ascending=[False, False], kind="stable"
     )

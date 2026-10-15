@@ -9,7 +9,7 @@ Open the deployed app: [Movie Match](https://movie-match-ssargsyann-2026.streaml
 ## Features
 
 - Content-based recommendation engine using TF-IDF and cosine similarity
-- Interactive Streamlit interface with 48 bundled movies
+- Interactive Streamlit interface with 4,803 bundled movies
 - Five recommendations for every selected film
 - Real movie posters through the TMDb API
 - Safe secret management: API keys are never committed to GitHub
@@ -61,6 +61,14 @@ Do not use the TMDb **API Read Access Token** for this project. Do not commit `s
 ```powershell
 .\.venv\Scripts\python.exe -m pytest -q
 ```
+
+## How recommendations work
+
+The app combines each movie's genres, keywords, and plot summary into a text profile. It converts those profiles into TF-IDF vectors and uses cosine similarity to find the five closest matches. The TF-IDF matrix is cached so the 4,803-film catalogue remains responsive after the first load.
+
+## Dataset
+
+The bundled catalogue contains 4,803 entries from the [TMDB 5000 Movie Dataset](https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata). It is a static dataset snapshot used for this educational project.
 
 ## Update the deployed app
 
